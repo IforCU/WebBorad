@@ -23,15 +23,41 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// mysql 연결
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-devtools' // 개발 편의성
+
+	// MySQL 연결
 	implementation 'mysql:mysql-connector-java:8.0.29'
-	// 스웨거
+
+	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
-	// lombok
+
+	// Lombok
 	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// WebSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// Kafka 관련
+	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+
+	// 로그
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+	// Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
 }
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.0"
+	}
+}
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()

@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: board
+
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/web_borad?createDatabaseIfNotExist=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: chat-topic
+          content-type: application/json
+        input:
+          destination: chat-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Swagger ??
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
