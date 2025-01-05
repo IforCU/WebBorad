@@ -3,7 +3,7 @@ spring:
     name: board
 
   datasource:
-    url: jdbc:mysql://host.docker.internal:3306/web_borad?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/web_borad?createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,18 +16,16 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
-  cloud:
-    stream:
-      bindings:
-        output:
-          destination: chat-topic
-          content-type: application/json
-        input:
-          destination: chat-topic
-          content-type: application/json
-      kafka:
-        binder:
-          brokers: localhost:9092
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: topic1
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
   data:
     redis:
