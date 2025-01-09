@@ -1,6 +1,7 @@
 package web.board.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -10,17 +11,14 @@ import web.board.model.Message;
 import java.util.List;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
+@RequiredArgsConstructor
 public class ChatController {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    public ChatController(KafkaTemplate<String, String> kafkaTemplate, RedisTemplate<String, Object> redisTemplate){
-        this.kafkaTemplate = kafkaTemplate;
-        this.redisTemplate = redisTemplate;
-    }
 
+    @Operation(summary = "레디스에 메세지를 보내기", description = "레디스에 메세지를 저장합니다")
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(@RequestBody Message message){
         kafkaTemplate.send("chat", message.getContent());
@@ -28,6 +26,7 @@ public class ChatController {
         return ResponseEntity.ok("Message sent");
     }
 
+    @Operation(summary = "레디스 메세지 로그", description = "레디스 메세지 로그를 확인합니다.")
     @GetMapping("/history")
     public ResponseEntity<List<Object>> getChatHistory(){
         List<Object> chatLog = redisTemplate.opsForList().range("chat_log", 0, -1);

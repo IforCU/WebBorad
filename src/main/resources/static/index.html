@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>WebSocket Test</h1>
+<button onclick="connect()">Connect</button>
+<button onclick="sendMessage()">Send Message</button>
+<div id="output"></div>
+
+<script>
+  let stompClient;
+
+  function connect() {
+    const socket = new SockJS('http://localhost:8080/chat');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+      document.getElementById('output').innerHTML += `<p>Connected: ${frame}</p>`;
+
+      // Subscribe to a topic
+      stompClient.subscribe('/topic/chat', function (message) {
+        document.getElementById('output').innerHTML += `<p>Received: ${message.body}</p>`;
+      });
+    });
+  }
+
+  function sendMessage() {
+    if (stompClient && stompClient.connected) {
+      stompClient.send('/api/chat/send', {}, JSON.stringify({
+        "sender": "WebSocketTest",
+        "content": "connected message"
+      }));
+    } else {
+      alert('Not connected');
+    }
+  }
+</script>
+</body>
+</html>
