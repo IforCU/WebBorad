@@ -19,13 +19,20 @@ public class KafkaController {
     private final KafkaProducerService kafkaProducerService;
     private final KafkaConsumerService kafkaConsumerService;
 
-    @Operation(summary = "카프카 메세지 보내기", description = "메세지를 카프카에 보냅니다.")
+    @Operation(summary = "단일 메시지 보내기", description = "메시지를 카프카에 전송합니다.")
     @PostMapping("/send")
-    public String sendMessage(@RequestParam String topic, @RequestParam String message, @RequestParam int count) {
+    public String sendMessage(@RequestParam String topic, @RequestParam String message) {
+        kafkaProducerService.sendMessageToKafka(topic, message);
+        return "Message sent successfully";
+    }
+
+    @Operation(summary = "카프카 메세지 보내기", description = "메세지를 카프카에 보냅니다.")
+    @PostMapping("/send-bulk")
+    public String sendBulkMessage(@RequestParam String topic, @RequestParam String message, @RequestParam int count) {
         long startTime = System.currentTimeMillis();
 
         // 메시지 전송
-        kafkaProducerService.sendMessage(topic, message, count);
+        kafkaProducerService.sendMessageToKafka(topic, message, count);
 
         // 모든 메시지가 소비될 때까지 대기
         try {
