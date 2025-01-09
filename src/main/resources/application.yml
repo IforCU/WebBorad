@@ -34,7 +34,6 @@ spring:
     redis:
       host: localhost
       port: 6379
-      connect-timeout: 2000
 
 # Swagger ??
 springdoc:
